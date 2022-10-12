@@ -103,7 +103,8 @@ def inv_check_calendar():
     logger("[Info] Check Investing.com Calendar ...")
 
     events = inv.calendar()
-    sendText("[알림] 주간 ★★★ 이벤트 브리핑입니다.")
+    if len(events) > 0:
+        sendText("[알림] 주간 ★★★ 이벤트 브리핑입니다.")
     for event in events:
         date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=10)
         actions.schedule.add_job(inv_check_event, 'date', run_date=date, args=[event['id']])

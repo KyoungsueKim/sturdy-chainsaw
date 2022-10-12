@@ -10,7 +10,7 @@ def log_file():
     if log_file_stream is None:
         if not os.path.isdir('logs'):
             os.mkdir('logs')
-        file = open(f'logs/logs_{datetime.now()}.txt', 'w')
+        file = open(f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%m-%S")}.txt', 'w')
         log_file_stream = file
 
     return log_file_stream

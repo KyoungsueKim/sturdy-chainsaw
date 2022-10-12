@@ -43,8 +43,12 @@ def getDynamicSoup(url: str, commands: list) -> BeautifulSoup:
 
             service = Service(f'{driver_path}/{version}/chromedriver')
             options = webdriver.ChromeOptions()
-            options.add_argument('headless')
-            options.add_argument('disable-gpu')
+            options.add_argument('--headless')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-gpu')
+            options.add_argument('--disable-extensions')
+            options.add_argument('--single-process')
+            options.add_argument('--disable-dev-shm-usage')
             options.add_argument('window-size = 1920x1080')
 
             # 드라이버 생성
@@ -100,7 +104,7 @@ def sendImages():
 
         # 2. Ctrl + A를 눌러 파일 전체 선택 후 마우스 30만큼 오른쪽으로 이동
         pyautogui.hotkey(ctrl, 'a')
-        pyautogui.moveTo(position.explorer + 30, duration=1)
+        pyautogui.moveTo(position.explorer[0] + 30, position.explorer[1], duration=1)
         time.sleep(0.1)
 
         # 3. 카톡창으로 드래그
