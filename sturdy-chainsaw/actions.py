@@ -14,6 +14,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Telegram post checkpoint.
 hedgehara = [0]
+hyottchart = [0]
 
 class actions:
     schedule = BackgroundScheduler()
@@ -72,7 +73,7 @@ def yna_check_article():
             saveImages(article['img_url'])
             sendImages()
 
-        sendText(f"[알림] 연합뉴스에서 새로운 기사가 작성되었습니다. \n제목: {article['title']} \n\n{article['url']}")
+        sendText(f"[알림] 연합뉴스에서 새로운 기사가 작성되었습니다. \n\n{article['url']} \n\n제목: {article['title']} \n\n")
 
     clearConsole()
     __safe_start_question()
@@ -109,7 +110,7 @@ def inv_check_calendar():
         date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=10)
         actions.schedule.add_job(inv_check_event, 'date', run_date=date, args=[event['id']])
 
-        sendText(f"{event['datetime']} \n{event['country']} {event['title']}")
+        sendText(f"{event['datetime']} (id: {event['id']}) \n{event['country']} {event['title']}")
         time.sleep(1.5)
 
     logger("[Info] Successfully Added events to schedule.")
@@ -162,6 +163,7 @@ def show_menu():
         "5. Investing.com 이벤트 결과 확인",
         "6. 연합뉴스 기사 확인",
         "7. hedgehara 텔레그램 포스트 확인",
+        "8. hyottchart 텔레그램 포스트 확인"
     ]
     actions.question = questionary.select("메뉴를 선택하세요.", choices=choices, use_indicator=True, qmark="", use_shortcuts=True)
     result = actions.question.ask()
@@ -188,6 +190,7 @@ def show_menu():
 
     # Investing.com 이벤트 결과 확인
     elif result == choices[4]:
+        __safe_stop_question()
         id = questionary.text("확인하려는 이벤트의 id를 입력해주세요. ", qmark="").ask()
         inv_check_event(str(id))
 
@@ -198,3 +201,7 @@ def show_menu():
     # hedgehara 텔레그램 포스트 확인
     elif result == choices[6]:
         tlg_check_post('hedgehara', hedgehara)
+
+    # hyottchart 텔레그램 포스트 확인
+    elif result == choices[7]:
+        tlg_check_post('hyottchart', hyottchart)

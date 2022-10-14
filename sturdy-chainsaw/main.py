@@ -22,6 +22,8 @@ if __name__ == '__main__':
         actions.schedule.add_job(yna_check_article, 'interval', minutes=5)
         # 30초마다 한 번씩 hedgehara 텔레그램 포스트 확인
         actions.schedule.add_job(tlg_check_post, 'interval', seconds=30, args=['hedgehara', hedgehara])
+        # 30초마다 한 번씩 hyottchart 텔레그램 포스트 확인
+        actions.schedule.add_job(tlg_check_post, 'interval', seconds=31, args=['hyottchart', hyottchart])
 
         logger("[Info] Start Sessions...")
         actions.schedule.print_jobs(out=log_file())

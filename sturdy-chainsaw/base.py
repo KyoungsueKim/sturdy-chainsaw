@@ -43,13 +43,8 @@ def getDynamicSoup(url: str, commands: list) -> BeautifulSoup:
 
             service = Service(f'{driver_path}/{version}/chromedriver')
             options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
-            options.add_argument('--no-sandbox')
-            options.add_argument('--disable-gpu')
-            options.add_argument('--disable-extensions')
-            options.add_argument('--single-process')
-            options.add_argument('--disable-dev-shm-usage')
-            options.add_argument('window-size = 1920x1080')
+            options.add_experimental_option("excludeSwitches", ['enable-logging'])
+            options.add_argument("--headless")
 
             # 드라이버 생성
             driver = webdriver.Chrome(service=service, options=options)
