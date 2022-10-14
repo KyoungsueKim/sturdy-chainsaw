@@ -52,7 +52,7 @@ def tlg_check_post(username, checkpoint: list):
             saveImages(image_url)
             sendImages()
 
-        sendText(f"[알림] 텔레그램 {username}에서 새로운 글이 업로드되었습니다. \n{post['url']} \n\n{post['text']}")
+        sendText(f"{post['text']} \n\n출처: 텔레그램 {username}")
 
     clearConsole()
     __safe_start_question()
@@ -69,11 +69,11 @@ def yna_check_article():
         logger(article)
         logger('\n')
 
-        if article['img_url'] is not None:
-            saveImages(article['img_url'])
-            sendImages()
+        # if article['img_url'] is not None:
+        #     saveImages(article['img_url'])
+        #     sendImages()
 
-        sendText(f"[알림] 연합뉴스에서 새로운 기사가 작성되었습니다. \n\n{article['url']} \n\n제목: {article['title']} \n\n")
+        sendText(f"{article['title']} \n\n{article['url']}")
 
     clearConsole()
     __safe_start_question()
@@ -105,14 +105,15 @@ def inv_check_calendar():
 
     events = inv.calendar()
     if len(events) > 0:
-        sendText("[알림] 주간 ★★★ 이벤트 브리핑입니다.")
-    for event in events:
-        date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=10)
-        actions.schedule.add_job(inv_check_event, 'date', run_date=date, args=[event['id']])
+        message = ""
+        message += "[알림] 주간 ★★★ 이벤트 브리핑입니다. \n\n\n"
+        for event in events:
+            date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=10)
+            actions.schedule.add_job(inv_check_event, 'date', run_date=date, args=[event['id']])
 
-        sendText(f"{event['datetime']} (id: {event['id']}) \n{event['country']} {event['title']}")
-        time.sleep(1.5)
+            message += f"{event['datetime']} (id: {event['id']}) \n{event['country']} {event['title']}\n\n"
 
+    sendText(message)
     logger("[Info] Successfully Added events to schedule.")
     actions.schedule.print_jobs(out=log_file())
     logger('\n')
