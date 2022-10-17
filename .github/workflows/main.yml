@@ -1,23 +1,22 @@
-- name: PyInstaller Windows
-  uses: JackMcKew/pyinstaller-action-windows@v0.1.2
+name: PyInstaller Windows
 
-  on:
-    push:
-      branches: [ main ]
+on:
+  push:
+    branches: [ main ]
 
-  jobs:
-    build:
-      runs-on: ubuntu-latest
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-        - name: Package Application
-          uses: JackMcKew/pyinstaller-action-windows@main
-          with:
-            path: ./
+      - name: Package Application
+        uses: JackMcKew/pyinstaller-action-windows@main
+        with:
+          path: ./
 
-        - uses: actions/upload-artifact@v2
-          with:
-            name: name-of-artifact
-            path: ./
+      - uses: actions/upload-artifact@v2
+        with:
+          name: name-of-artifact
+          path: ./
