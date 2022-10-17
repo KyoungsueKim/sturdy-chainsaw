@@ -108,7 +108,7 @@ def inv_check_calendar():
         message = ""
         message += "[알림] 주간 ★★★ 이벤트 브리핑입니다. \n\n\n"
         for event in events:
-            date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=10)
+            date = datetime.strptime(event['datetime'], '%Y/%m/%d %H:%M:%S') + timedelta(minutes=1)
             actions.schedule.add_job(inv_check_event, 'date', run_date=date, args=[event['id']])
 
             message += f"{event['datetime']} (id: {event['id']}) \n{event['country']} {event['title']}\n\n"
