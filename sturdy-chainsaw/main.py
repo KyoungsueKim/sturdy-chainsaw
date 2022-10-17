@@ -6,6 +6,7 @@ from logger import logger, log_file
 release = True
 
 if __name__ == '__main__':
+    sys.stderr = log_file()
     clearConsole()
     tutorial()
 
