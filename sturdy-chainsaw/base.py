@@ -18,13 +18,14 @@ class position:
 
 
 def getSoup(url: str) -> BeautifulSoup:
-    req = requests.get(url=url, verify=False)
+    headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 10.0;Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')}
+    req = requests.get(url=url, verify=False, headers=headers)
     html = req.text
     soup = BeautifulSoup(html, 'html.parser')
     return soup
 
 
-def getDynamicSoup(url: str, commands: list) -> BeautifulSoup:
+def getDynamicSoup(url: str, commands=[]) -> BeautifulSoup:
     global driver
     driver_path = "chromedriver"
 

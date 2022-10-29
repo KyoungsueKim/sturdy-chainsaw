@@ -16,8 +16,8 @@ def log_file():
     return log_file_stream
 
 
-def logger(text: str):
-    print(f"[{datetime.now()}] {text}" if text != "\n" else "\n", file=log_file(), flush=True)
+def logger(text):
+    print(f"[{datetime.now().strftime('%Y/%m/%d %I:%m:%S')}] {text}" if text != "\n" else "\n", file=log_file(), flush=True)
 
 
 if __name__ == '__main__':

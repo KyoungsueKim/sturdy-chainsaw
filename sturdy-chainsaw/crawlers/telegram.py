@@ -1,13 +1,14 @@
 import base
 import re
+from bs4 import NavigableString
 
 url_regex = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)'
 
 
 def post(username: str, checkpoint: list) -> dict:
     url = f'https://t.me/s/{username}'
-    soup = base.getSoup(url)
     try:
+        soup = base.getSoup(url)
         message = soup.find_all('div', {'class': 'tgme_widget_message_wrap'})[-1]
         post_num = int(message.find('div')['data-post'].split('/')[-1])
 
@@ -20,7 +21,9 @@ def post(username: str, checkpoint: list) -> dict:
 
             text = message.find('div', {'class': 'tgme_widget_message_text'})
             if text is not None:
-                text = text.text
+                text = [item for item in text.contents if isinstance(item, NavigableString)]
+                text = '\n'.join(text)
+
 
             link_priv_image = message.find('a', {'class': 'tgme_widget_message_link_preview'})
             if link_priv_image is not None:

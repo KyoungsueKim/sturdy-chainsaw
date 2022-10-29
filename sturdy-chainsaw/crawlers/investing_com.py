@@ -1,29 +1,42 @@
 import base
+import flag
 
 # from ..core import base
 
 current_id = 0
-last_date = 0
+last_economy_date = 0
 
 
-def article() -> str:
-    global last_date, current_id
+def article() -> dict:
+    global last_economy_date, current_id
 
-    soup = base.getSoup('https://kr.investing.com/news/stock-market-news')
-    article_list = soup.find_all('article', {'class': 'js-article-item'})
-    result = None
-    for i in range(len(article_list)):
-        try:
+    try:
+        result = {}
+        soup = base.getDynamicSoup('https://kr.investing.com/news/stock-market-news')
+        article_list = soup.find_all('article', {'class': 'js-article-item'})
+        for i in range(len(article_list)):
             id = int(article_list[i]['data-id'])
-            text = article_list[i].find('a', {'class': 'title'}).text
+            element = article_list[i].find('a', {'class': 'title'})
+            text = element.text
 
             # 최신 글 이라면
             if ("퇴근길" in text or "브런치" in text) and (current_id < id):
                 current_id = id
-                result = text
+                type = "퇴근길" if "퇴근길" in text else "브런치"
+                url = 'https://kr.investing.com' + element['href']
+                soup = base.getDynamicSoup(url)
 
-        except Exception as e:
-            pass
+                articlePage = soup.find('div', {'class': 'WYSIWYG articlePage'})
+                img_url = articlePage.find('img')['src']
+                contents = [title.text for title in articlePage.find_all('p') if '▲' in title.text]
+
+            result['type'] = type
+            result['img_url'] = img_url
+            result['article'] = contents
+            result['url'] = url
+
+    except Exception as e:
+        pass
 
     return result
 
@@ -44,7 +57,8 @@ def calendar() -> list:
                 country = event.find('span')['title']
                 title = " ".join(event.find('a').text.split())
                 id = event['event_attr_id']
-                result.append({'datetime': datetime, 'country': country, 'title': title, 'id': id})
+                emoji = flag.flag(event.find('td', {'class': 'flagCur'}).text[2:4])
+                result.append({'datetime': datetime, 'country': country, 'title': title, 'id': id, 'emoji': emoji})
 
             except:
                 pass

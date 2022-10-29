@@ -5,3 +5,4 @@ selenium~=4.1.5
 apscheduler~=3.9.1
 questionary~=1.10.0
 pyautogui~=0.9.53
+emoji-country-flag
