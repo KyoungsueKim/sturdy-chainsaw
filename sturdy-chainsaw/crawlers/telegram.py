@@ -24,10 +24,12 @@ def post(username: str, checkpoint: list) -> dict:
                 text = [item for item in text.contents if isinstance(item, NavigableString)]
                 text = '\n'.join(text)
 
-
             link_priv_image = message.find('a', {'class': 'tgme_widget_message_link_preview'})
-            if link_priv_image is not None:
-                link_priv_image = re.compile(url_regex).search(link_priv_image.find('i')['style'])[0]
+            if link_priv_image is not None and link_priv_image.find('i') is not None:
+                link_priv_image = link_priv_image.find('i')
+                link_priv_image = re.compile(url_regex).search(link_priv_image['style'])[0]
+            else:
+                link_priv_image = None
 
             link_priv_title = message.find('a', {'class': 'tgme_widget_message_link_preview'})
             if link_priv_title is not None:
@@ -41,5 +43,5 @@ def post(username: str, checkpoint: list) -> dict:
 
             return {'image_url': image_url, 'text': text, 'link_priv_image': link_priv_image, 'link_priv_title': link_priv_title, 'link_priv_dscrip': link_priv_dscrip, 'url': url}
 
-    except:
+    except Exception as e:
         return None
