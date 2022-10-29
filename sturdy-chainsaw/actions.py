@@ -17,6 +17,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # Telegram post checkpoint.
 hedgehara = [0]
 hyottchart = [0]
+bumgore = [0]
+Macrojunglefortarzan = [0]
+
 
 # naver blog checkpoint.
 gunhey = ['']
@@ -237,7 +240,9 @@ def show_menu():
         "7. 연합뉴스 긴급 속보 확인",
         "8. hedgehara 텔레그램 포스트 확인",
         "9. hyottchart 텔레그램 포스트 확인",
-        "10. 네이버 블로그 gunhey 포스트 확인"
+        "10. bumgore 텔레그램 포스트 확인",
+        "11. Macrojunglefortarzan 텔레그램 포스트 확인",
+        "12. 네이버 블로그 gunhey 포스트 확인"
     ]
     actions.question = questionary.select("메뉴를 선택하세요.", choices=choices, use_indicator=True, qmark="", use_shortcuts=True)
     result = actions.question.ask()
@@ -284,6 +289,14 @@ def show_menu():
     elif result == choices[8]:
         tlg_check_post('hyottchart', hyottchart)
 
-    # 네이버 블로그 gunhey 포스트 확인
+    # bumgore 텔레그램 포스트 확인
     elif result == choices[9]:
+        tlg_check_post('bumgore', bumgore)
+
+    # Macrojunglefortarzan 텔레그램 포스트 확인
+    elif result == choices[10]:
+        tlg_check_post('Macrojunglefortarzan', Macrojunglefortarzan)
+
+    # 네이버 블로그 gunhey 포스트 확인
+    elif result == choices[11]:
         naver_check_post('gunhey', gunhey)

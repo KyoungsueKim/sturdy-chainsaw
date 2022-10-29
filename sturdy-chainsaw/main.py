@@ -22,14 +22,18 @@ if __name__ == '__main__':
         actions.schedule.add_job(naver_check_post, 'interval', days=1, args=['gunhey', gunhey])
         # 6시간마다 한 번씩 Investing.com 기사 확인
         actions.schedule.add_job(inv_check_article, 'interval', hours=1)
-        # 5분마다 한 번씩 연합뉴스 기사 확인
+        # 5분마다 한 번씩 연합뉴스 경제 기사 확인
         actions.schedule.add_job(yna_check_economy, 'interval', minutes=5)
-        # 5분마다 한 번씩 연합뉴스 기사 확인
+        # 5분마다 한 번씩 연합뉴스 긴급 기사 확인
         actions.schedule.add_job(yna_check_break, 'interval', minutes=5, seconds=1)
+        # 5분마다 한 번씩 hyottchart 텔레그램 포스트 확인
+        actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=2, args=['hyottchart', hyottchart])
+        # 5분마다 한 번씩 bumgore 텔레그램 포스트 확인
+        actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=3, args=['bumgore', bumgore])
+        # 5분마다 한 번씩 hyottchart 텔레그램 포스트 확인
+        actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=4, args=['Macrojunglefortarzan', Macrojunglefortarzan])
         # 30초마다 한 번씩 hedgehara 텔레그램 포스트 확인
         # actions.schedule.add_job(tlg_check_post, 'interval', seconds=30, args=['hedgehara', hedgehara])
-        # 30초마다 한 번씩 hyottchart 텔레그램 포스트 확인
-        actions.schedule.add_job(tlg_check_post, 'interval', seconds=31, args=['hyottchart', hyottchart])
 
         logger("[Info] Start Sessions...")
         actions.schedule.print_jobs(out=log_file())
