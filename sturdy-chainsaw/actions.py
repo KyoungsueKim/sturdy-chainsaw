@@ -134,7 +134,7 @@ def inv_check_article():
     clearConsole()
     print("investing.com 브런치 & 퇴근길 기사 검사 중. 잠시만 기다려주세요...")
     result = inv.article()
-    if result is not None:
+    if len(result) > 0:
         logger("[Info] Investing.com news update found")
         logger(result)
         logger('\n')
