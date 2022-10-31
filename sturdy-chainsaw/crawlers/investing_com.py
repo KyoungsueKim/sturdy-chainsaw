@@ -4,17 +4,19 @@ import flag
 # from ..core import base
 
 current_id = 0
-last_economy_date = 0
 
 
 def article() -> dict:
-    global last_economy_date, current_id
+    global current_id
 
     try:
         result = {}
         soup = base.getDynamicSoup('https://kr.investing.com/news/stock-market-news')
         article_list = soup.find_all('article', {'class': 'js-article-item'})
         for i in range(len(article_list)):
+            if not 'data-id' in article_list[i].attrs:
+                continue
+
             id = int(article_list[i]['data-id'])
             element = article_list[i].find('a', {'class': 'title'})
             text = element.text
@@ -30,13 +32,16 @@ def article() -> dict:
                 img_url = articlePage.find('img')['src']
                 contents = [title.text for title in articlePage.find_all('p') if '▲' in title.text]
 
-            result['type'] = type
-            result['img_url'] = img_url
-            result['article'] = contents
-            result['url'] = url
+                result['type'] = type
+                result['img_url'] = img_url
+                result['article'] = contents
+                result['url'] = url
+
+        return result
 
     except Exception as e:
-        pass
+        base.sendText(f"인베스팅닷컴 기사 확인 중 에러가 발생했습니다. {e.args}")
+        return None
 
     return result
 
@@ -52,21 +57,18 @@ def calendar() -> list:
         result = []
         events = [event for event in event_set if len(event.find_all('td', {'data-img_key': 'bull3'})) > 0]
         for event in events:
-            try:
-                datetime = event['data-event-datetime']
-                country = event.find('span')['title']
-                title = " ".join(event.find('a').text.split())
-                id = event['event_attr_id']
-                emoji = flag.flag(event.find('td', {'class': 'flagCur'}).text[2:4])
-                result.append({'datetime': datetime, 'country': country, 'title': title, 'id': id, 'emoji': emoji})
-
-            except:
-                pass
+            datetime = event['data-event-datetime']
+            country = event.find('span')['title']
+            title = " ".join(event.find('a').text.split())
+            id = event['event_attr_id']
+            emoji = flag.flag(event.find('td', {'class': 'flagCur'}).text[2:4])
+            result.append({'datetime': datetime, 'country': country, 'title': title, 'id': id, 'emoji': emoji})
 
         return result
 
-    except:
-        return {}
+    except Exception as e:
+        base.sendText(f"인베스팅닷컴 캘린더 확인 중 에러가 발생했습니다. {e.args}")
+        return []
 
 
 def calendar_find(id: str) -> dict:
@@ -85,5 +87,6 @@ def calendar_find(id: str) -> dict:
 
         return {'country': country, 'title': title, 'actual': actual, 'forecast': forecast, 'previous': previous}
 
-    except:
+    except Exception as e:
+        base.sendText(f"인베스팅닷컴 별 세 개 이벤트 확인 중 에러가 발생했습니다. {e.args}")
         return {}

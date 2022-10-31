@@ -2,6 +2,7 @@ import time
 
 import questionary
 from datetime import datetime, timedelta
+from main import version
 from base import *
 from crawlers import investing_com as inv
 from crawlers import telegram as tlg
@@ -215,7 +216,7 @@ def inv_check_event(*args):
 
 
 def tutorial():
-    print("[아주대학교 증권연구회 정보 크롤러 v1.1.0]")
+    print(f"[아주대학교 증권연구회 정보 크롤러 v{version}]")
 
     openImagePath()
     questionary.confirm("카톡창과 이미지 폴더 창을 적절히 배치하세요. 그 뒤 마우스 커서 위치 캡처를 위해 이미지 폴더가 열린 탐색기의 빈 공간으로 옮기고 엔터를 누르세요.",
@@ -231,7 +232,7 @@ def tutorial():
 
 def show_menu():
     choices = [
-        "1. 마우스 포인터 위치 체크",
+        "1. 크롤링 체크포인터 확인",
         "2. 스케줄러 확인",
         "3. Investing.com 기사 확인",
         "4. Investing.com 캘린더 확인 및 예약",
@@ -248,9 +249,20 @@ def show_menu():
     result = actions.question.ask()
     clearConsole()
 
-    # 마우스 포인터 위치 체크
+    # 크롤링 체크포인터 확인
     if result == choices[0]:
-        print("현재 마우스 위치: ", pyautogui.position(), end="\n\n")
+        print("[Investing.com 체크포인터] \n"
+              f"퇴근길/브런치 id: {inv.current_id}\n\n"
+              f"[연합뉴스 Yna 체크포인터] \n"
+              f"국제뉴스 date: {yna.last_economy_date}\n"
+              f"긴급뉴스 date: {yna.last_break_date}\n\n"
+              f"[텔레그램 체크포인터] \n"
+              f"hedgehara: {hedgehara[0]}\n"
+              f"hyottchart: {hyottchart[0]}\n"
+              f"bumgore: {bumgore[0]}\n"
+              f"Macrojunglefortarzan: {Macrojunglefortarzan[0]}\n\n"
+              f"[네이버 블로그 체크포인터] \n"
+              f"gunhey: {gunhey[0]}", end="\n\n")
         show_menu()
 
     # 스케줄러 확인
