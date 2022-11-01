@@ -79,9 +79,8 @@ def tlg_check_post(username, checkpoint: list):
         logger('\n')
 
         # 개시글에 이미지가 존재한다면
-        image_url = post['image_url'] if post['image_url'] is not None else post['link_priv_image']
-        if image_url is not None:
-            saveImages(image_url)
+        if post['image_url'] is not None:
+            saveImages(post['image_url'])
             sendImages()
 
         sendText((f"{post['text']} \n\n" if post['text'] is not None else '') + f"출처: 텔레그램 {username}")

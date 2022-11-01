@@ -1,6 +1,6 @@
 import base
 import re
-from bs4 import NavigableString
+from bs4 import NavigableString, Tag
 
 url_regex = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)'
 
@@ -19,10 +19,13 @@ def post(username: str, checkpoint: list) -> dict:
             if image_url is not None:
                 image_url = re.compile(url_regex).search(image_url['style'])[0]
 
-            text = message.find('div', {'class': 'tgme_widget_message_text'})
-            if text is not None:
-                text = [item for item in text.contents if isinstance(item, NavigableString)]
-                text = '\n'.join(text)
+            text_element = message.find('div', {'class': 'tgme_widget_message_text'})
+            text = ''
+            if text_element is not None:
+                for element in text_element.contents:
+                    text += (element.text if hasattr(element, 'text') else element) + "\n"
+                # text = [item for item in text.contents if isinstance(item, NavigableString)]
+                # text = '\n'.join(text)
 
             link_priv_image = message.find('a', {'class': 'tgme_widget_message_link_preview'})
             if link_priv_image is not None and link_priv_image.find('i') is not None:
