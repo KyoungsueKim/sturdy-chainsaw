@@ -26,12 +26,12 @@ if __name__ == '__main__':
         # 5분마다 한 번씩 연합뉴스 경제 기사 확인
         actions.schedule.add_job(yna_check_economy, 'interval', minutes=5)
         # 5분마다 한 번씩 연합뉴스 긴급 기사 확인
-        actions.schedule.add_job(yna_check_break, 'interval', minutes=5, seconds=1)
+        actions.schedule.add_job(yna_check_break, 'interval', minutes=1, seconds=1)
         # 5분마다 한 번씩 hyottchart 텔레그램 포스트 확인
         actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=2, args=['hyottchart', hyottchart])
         # 5분마다 한 번씩 bumgore 텔레그램 포스트 확인
-        actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=3, args=['bumgore', bumgore])
-        # 5분마다 한 번씩 hyottchart 텔레그램 포스트 확인
+        # actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=3, args=['bumgore', bumgore])
+        # 5분마다 한 번씩 Macrojunglefortarzan 텔레그램 포스트 확인
         actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=4, args=['Macrojunglefortarzan', Macrojunglefortarzan])
         # 30초마다 한 번씩 hedgehara 텔레그램 포스트 확인
         # actions.schedule.add_job(tlg_check_post, 'interval', seconds=30, args=['hedgehara', hedgehara])
