@@ -8,39 +8,31 @@ last_break_date = datetime(2021, 1, 1)
 def economy() -> dict:
     global last_economy_date
 
-    try:
-        soup = base.getSoup('https://www.yna.co.kr/economy/international-economy')
-        result_set = [result for result in soup.find_all('div', {'class': 'item-box01'}) if len(result.find_all('span', {'class': 'txt-time'})) > 0]
-        article_date = datetime.strptime(datetime.now().strftime('%Y') + '-' + result_set[0].find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
+    soup = base.getSoup('https://www.yna.co.kr/economy/international-economy')
+    result_set = [result for result in soup.find_all('div', {'class': 'item-box01'}) if len(result.find_all('span', {'class': 'txt-time'})) > 0]
+    article_date = datetime.strptime(datetime.now().strftime('%Y') + '-' + result_set[0].find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
 
-        if article_date > last_economy_date:
-            last_economy_date = article_date
+    if article_date > last_economy_date:
+        last_economy_date = article_date
 
-            title = result_set[0].find('strong', {'class': 'tit-news'}).text
-            url = 'https:' + result_set[0].find('a')['href']
-            img_url = 'https:' + result_set[0].find('img')['src']
-            return {'title': title, 'url': url, 'img_url': img_url}
-
-    except:
-        return None
+        title = result_set[0].find('strong', {'class': 'tit-news'}).text
+        url = 'https:' + result_set[0].find('a')['href']
+        img_url = 'https:' + result_set[0].find('img')['src']
+        return {'title': title, 'url': url, 'img_url': img_url}
 
 
 def break_news() -> dict:
     global last_break_date
 
-    try:
-        soup = base.getSoup('https://www.yna.co.kr/theme/breaknews-history')
-        article = soup.find('ul', {'class': 'list'}).find_all('li')[0]
-        uptime = datetime.strptime(article.find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
+    soup = base.getSoup('https://www.yna.co.kr/theme/breaknews-history')
+    article = soup.find('ul', {'class': 'list'}).find_all('li')[0]
+    uptime = datetime.strptime(article.find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
 
-        if uptime > last_break_date:
-            last_break_date = uptime
+    if uptime > last_break_date:
+        last_break_date = uptime
 
-            title = article.find('strong', {'class': 'tit-news'}).text
-            url = 'https:' + article.find('a')['href']
-            img_url = 'https:' + article.find('img')['src']
+        title = article.find('strong', {'class': 'tit-news'}).text
+        url = 'https:' + article.find('a')['href']
+        img_url = 'https:' + article.find('img')['src']
 
-            return {'title': title, 'url': url, 'img_url': img_url}
-
-    except Exception as e:
-        return None
+        return {'title': title, 'url': url, 'img_url': img_url}
