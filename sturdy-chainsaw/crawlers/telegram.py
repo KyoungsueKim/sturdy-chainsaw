@@ -1,7 +1,6 @@
 import base
 import re
 from bs4 import NavigableString, Tag
-from actions import __safe_start_question
 
 url_regex = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)'
 
