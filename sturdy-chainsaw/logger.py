@@ -10,14 +10,14 @@ def log_file():
     if log_file_stream is None:
         if not os.path.isdir('logs'):
             os.mkdir('logs')
-        file = open(f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%m-%S")}.txt', 'w')
+        file = open(f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%M-%S")}.txt', 'w')
         log_file_stream = file
 
     return log_file_stream
 
 
 def logger(text):
-    print(f"[{datetime.now().strftime('%Y/%m/%d %I:%m:%S')}] {text}" if text != "\n" else "\n", file=log_file(), flush=True)
+    print(f"[{datetime.now().strftime('%Y/%m/%d %I:%M:%S')}] {text}" if text != "\n" else "\n", file=log_file(), flush=True)
 
 
 if __name__ == '__main__':
