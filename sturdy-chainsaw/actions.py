@@ -20,6 +20,7 @@ hedgehara = [0]
 hyottchart = [0]
 bumgore = [0]
 Macrojunglefortarzan = [0]
+MacroAllocation = [0]
 
 
 # naver blog checkpoint.
@@ -280,7 +281,8 @@ def show_menu():
         "9. hyottchart 텔레그램 포스트 확인",
         "10. bumgore 텔레그램 포스트 확인",
         "11. Macrojunglefortarzan 텔레그램 포스트 확인",
-        "12. 네이버 블로그 gunhey 포스트 확인"
+        "12. MacroAllocation 텔레그램 포스트 확인",
+        "13. 네이버 블로그 gunhey 포스트 확인"
     ]
     actions.question = questionary.select("메뉴를 선택하세요.", choices=choices, use_indicator=True, qmark="", use_shortcuts=True)
     result = actions.question.ask()
@@ -346,6 +348,10 @@ def show_menu():
     elif result == choices[10]:
         tlg_check_post('Macrojunglefortarzan', Macrojunglefortarzan)
 
-    # 네이버 블로그 gunhey 포스트 확인
+    # MacroAllocation 텔레그램 포스트 확인
     elif result == choices[11]:
+        tlg_check_post('MacroAllocation', MacroAllocation)
+
+    # 네이버 블로그 gunhey 포스트 확인
+    elif result == choices[12]:
         naver_check_post('gunhey', gunhey)

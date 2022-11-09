@@ -35,6 +35,8 @@ if __name__ == '__main__':
         actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=4, args=['Macrojunglefortarzan', Macrojunglefortarzan])
         # 30초마다 한 번씩 hedgehara 텔레그램 포스트 확인
         # actions.schedule.add_job(tlg_check_post, 'interval', seconds=30, args=['hedgehara', hedgehara])
+        # 5분마다 한 번씩 MacroAllocation 텔레그램 포스트 확인
+        actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=3, args=['MacroAllocation', MacroAllocation])
 
         logger("[Info] Start Sessions...")
         actions.schedule.print_jobs(out=log_file())
