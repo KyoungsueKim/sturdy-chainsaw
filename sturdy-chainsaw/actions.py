@@ -63,7 +63,7 @@ def naver_check_post(username, checkpoint: list):
 
             sendText(f"{post['title']} \n{post['url']} \n\n {post['text']} \n\n\n출처: 네이버 블로그 {username}")
     except Exception as e:
-        sendText(f"네이버 블로그 {username} 글 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"네이버 블로그 {username} 글 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -92,7 +92,7 @@ def tlg_check_post(username, checkpoint: list):
             sendText((f"{post['text']} \n\n" if post['text'] is not None else '') + f"출처: 텔레그램 {username}")
 
     except Exception as e:
-        sendText(f"텔레그램 {username} 글 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"텔레그램 {username} 글 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -119,7 +119,7 @@ def yna_check_economy():
             sendText(f"{article['title']} \n\n{article['url']}")
 
     except Exception as e:
-        sendText(f"연합뉴스 기사 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"연합뉴스 기사 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -146,7 +146,7 @@ def yna_check_break():
             sendText(f"{article['title']} \n\n{article['url']}")
 
     except Exception as e:
-        sendText(f"연합뉴스 긴급 뉴스 기사 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"연합뉴스 긴급 뉴스 기사 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -177,7 +177,7 @@ def inv_check_article():
             sendText(message)
 
     except Exception as e:
-        sendText(f"Investing.com 브런치 & 퇴근길 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"Investing.com 브런치 & 퇴근길 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -216,7 +216,7 @@ def inv_check_calendar():
         logger('\n')
 
     except Exception as e:
-        sendText(f"Investing.com 캘린더 확인 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"Investing.com 캘린더 확인 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
@@ -244,7 +244,7 @@ def inv_check_event(*args):
         logger('\n')
 
     except Exception as e:
-        sendText(f"Investing.com 이벤트(id: {args}) 검사 중 에러가 발생했습니다. \n{e.args}")
+        # sendText(f"Investing.com 이벤트(id: {args}) 검사 중 에러가 발생했습니다. \n{e.args}")
         logger(e.args)
 
     finally:
