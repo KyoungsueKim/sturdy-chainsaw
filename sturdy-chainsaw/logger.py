@@ -1,23 +1,12 @@
 import os.path
 from datetime import datetime
 
-log_file_stream = None
-
-
-# 로그 파일 없으면 생성
-def log_file():
-    global log_file_stream
-    if log_file_stream is None:
-        if not os.path.isdir('logs'):
-            os.mkdir('logs')
-        file = open(f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%M-%S")}.txt', 'w')
-        log_file_stream = file
-
-    return log_file_stream
+log_file_name = f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%M-%S")}.txt'
 
 
 def logger(text):
-    print(f"[{datetime.now().strftime('%Y/%m/%d %I:%M:%S')}] {text}" if text != "\n" else "\n", file=log_file(), flush=True)
+    with open(log_file_name, 'w') as file:
+        print(f"[{datetime.now().strftime('%Y/%m/%d %I:%M:%S')}] {text}" if text != "\n" else "\n", file=file, flush=True)
 
 
 if __name__ == '__main__':

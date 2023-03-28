@@ -56,7 +56,7 @@ def getDynamicSoup(url: str, commands=[]) -> BeautifulSoup:
         commands.append('window.scrollTo(0, document.body.scrollHeight)')
         for command in commands:
             driver.implicitly_wait(5)
-            time.sleep(1)
+            time.sleep(5)
             driver.execute_script(command)
         driver.implicitly_wait(5)
         time.sleep(1)

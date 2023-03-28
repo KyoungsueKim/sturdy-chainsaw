@@ -8,7 +8,7 @@ from crawlers import investing_com as inv
 from crawlers import telegram as tlg
 from crawlers import yna
 from crawlers import naver_blog as nblog
-from logger import logger, log_file
+from logger import logger, log_file_name
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor
 import urllib3
@@ -213,7 +213,7 @@ def inv_check_calendar():
 
             sendText(message)
             logger("[Info] Successfully Added events to schedule.")
-            actions.schedule.print_jobs(out=log_file())
+            actions.schedule.print_jobs(out=open(log_file_name, 'w'))
         logger('\n')
 
     except Exception as e:

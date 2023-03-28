@@ -1,7 +1,6 @@
 import base
 import flag
-
-# from ..core import base
+import base
 
 current_id = 0
 

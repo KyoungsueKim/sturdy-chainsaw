@@ -1,14 +1,11 @@
-import logging
-import time
-from base import clearConsole
 from actions import *
-from logger import logger, log_file
+from logger import logger, log_file_name
 
 release = True
 version = "1.1.1"
 
 if __name__ == '__main__':
-    sys.stderr = log_file()
+    sys.stderr = open(log_file_name, 'w')
     clearConsole()
     tutorial()
 
