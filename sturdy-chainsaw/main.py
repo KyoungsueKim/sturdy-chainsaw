@@ -36,7 +36,7 @@ if __name__ == '__main__':
         actions.schedule.add_job(tlg_check_post, 'interval', minutes=5, seconds=3, args=['MacroAllocation', MacroAllocation])
 
         logger("[Info] Start Sessions...")
-        actions.schedule.print_jobs(out=log_file())
+        actions.schedule.print_jobs(out=open(log_file_name, 'w'))
         logger("\n")
     else:
         pass
