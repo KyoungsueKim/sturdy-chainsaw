@@ -1,8 +1,9 @@
 import base
 import re
-from bs4 import NavigableString, Tag
 
-url_regex = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)'
+
+class Config:
+    url_regex = r'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)'
 
 
 def post(username: str, checkpoint: list) -> dict:
@@ -16,7 +17,7 @@ def post(username: str, checkpoint: list) -> dict:
 
         image_url = message.find('a', {'class': 'tgme_widget_message_photo_wrap'})
         if image_url is not None:
-            image_url = re.compile(url_regex).search(image_url['style'])[0]
+            image_url = re.compile(Config.url_regex).search(image_url['style'])[0]
 
         text_element = message.find('div', {'class': 'tgme_widget_message_text'})
         text = ''
@@ -29,7 +30,7 @@ def post(username: str, checkpoint: list) -> dict:
         link_priv_image = message.find('a', {'class': 'tgme_widget_message_link_preview'})
         if link_priv_image is not None and link_priv_image.find('i') is not None:
             link_priv_image = link_priv_image.find('i')
-            link_priv_image = re.compile(url_regex).search(link_priv_image['style'])[0]
+            link_priv_image = re.compile(Config.url_regex).search(link_priv_image['style'])[0]
         else:
             link_priv_image = None
 

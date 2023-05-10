@@ -1,11 +1,12 @@
 import os.path
 from datetime import datetime
 
-log_file_name = f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%M-%S")}.txt'
+class Config:
+    log_file_name = f'logs/logs_{datetime.now().strftime("%Y-%m-%d %I-%M-%S")}.txt'
 
 
 def logger(text):
-    with open(log_file_name, 'w') as file:
+    with open(Config.log_file_name, 'w') as file:
         print(f"[{datetime.now().strftime('%Y/%m/%d %I:%M:%S')}] {text}" if text != "\n" else "\n", file=file, flush=True)
 
 

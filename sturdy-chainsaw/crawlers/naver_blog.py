@@ -1,5 +1,4 @@
 import base
-from datetime import datetime
 
 
 def post(username: str, checkpoint: list) -> dict:

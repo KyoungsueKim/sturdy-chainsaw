@@ -2,29 +2,30 @@ import time
 
 import questionary
 from datetime import datetime, timedelta
-from main import version
+from main import Config as main_config
 from base import *
 from crawlers import investing_com as inv
 from crawlers import telegram as tlg
 from crawlers import yna
 from crawlers import naver_blog as nblog
-from logger import logger, log_file_name
+from logger import logger
+from logger import Config as logger_config
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.executors.pool import ThreadPoolExecutor
 import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Telegram post checkpoint.
-hedgehara = [0]
-hyottchart = [0]
-bumgore = [0]
-Macrojunglefortarzan = [0]
-MacroAllocation = [0]
+class Config:
+    # Telegram post checkpoint.
+    hedgehara = [0]
+    hyottchart = [0]
+    bumgore = [0]
+    Macrojunglefortarzan = [0]
+    MacroAllocation = [0]
 
-
-# naver blog checkpoint.
-gunhey = ['']
+    # naver blog checkpoint.
+    gunhey = ['']
 
 
 class actions:
@@ -159,7 +160,7 @@ def inv_check_article():
     __safe_stop_question()
 
     clearConsole()
-    print("investing.com 브런치 & 퇴근길 기사 검사 중. 잠시만 기다려주세요...")
+    print("investing.com 주요뉴스 기사 검사 중. 잠시만 기다려주세요...")
     try:
         result = inv.article()
         if len(result) > 0:
@@ -170,7 +171,7 @@ def inv_check_article():
             saveImages(result['img_url'])
             sendImages()
 
-            message = f"네이버 오디오클립과 인포스탁데일리가 전해드리는 {datetime.now().strftime('%m월 %d일')} {result['type']} 써머리입니다.\n\n"
+            message = f"인포스탁데일리가 전해드리는 {datetime.now().strftime('%m월 %d일')} 이 시각 언론사별 주요뉴스입니다.\n\n"
             message += result['url'] + "\n\n"
             for article in result['article']:
                 message += article + '\n\n'
@@ -213,7 +214,7 @@ def inv_check_calendar():
 
             sendText(message)
             logger("[Info] Successfully Added events to schedule.")
-            actions.schedule.print_jobs(out=open(log_file_name, 'w'))
+            actions.schedule.print_jobs(out=open(logger_config.log_file_name, 'w'))
         logger('\n')
 
     except Exception as e:
@@ -235,7 +236,7 @@ def inv_check_event(*args):
     print(f"investing.com 이벤트(id: {args}) 결과 확인 중. 잠시만 기다려주세요...")
     logger(f"[Info] Check result of id: {args} in Investing.com Calendar ...")
     try:
-        result: dict
+        result = {}
         for id in args:
             result = inv.calendar_find(id)
             sendText(f"[안내] 이벤트가 공개되었습니다. \n\n{result['country']} {result['title']}"
@@ -254,7 +255,7 @@ def inv_check_event(*args):
 
 
 def tutorial():
-    print(f"[아주대학교 증권연구회 정보 크롤러 v{version}]")
+    print(f"[아주대학교 증권연구회 정보 크롤러 v{main_config.version}]")
 
     openImagePath()
     questionary.confirm("카톡창과 이미지 폴더 창을 적절히 배치하세요. 그 뒤 마우스 커서 위치 캡처를 위해 이미지 폴더가 열린 탐색기의 빈 공간으로 옮기고 엔터를 누르세요.",
@@ -291,17 +292,17 @@ def show_menu():
     # 크롤링 체크포인터 확인
     if result == choices[0]:
         print("[Investing.com 체크포인터] \n"
-              f"퇴근길/브런치 id: {inv.current_id}\n\n"
+              f"주요뉴스 id: {inv.Config.current_id}\n\n"
               f"[연합뉴스 Yna 체크포인터] \n"
-              f"국제뉴스 date: {yna.last_economy_date}\n"
-              f"긴급뉴스 date: {yna.last_break_date}\n\n"
+              f"국제뉴스 date: {yna.Config.last_economy_date}\n"
+              f"긴급뉴스 date: {yna.Config.last_break_date}\n\n"
               f"[텔레그램 체크포인터] \n"
-              f"hedgehara: {hedgehara[0]}\n"
-              f"hyottchart: {hyottchart[0]}\n"
-              f"bumgore: {bumgore[0]}\n"
-              f"Macrojunglefortarzan: {Macrojunglefortarzan[0]}\n\n"
+              f"hedgehara: {Config.hedgehara[0]}\n"
+              f"hyottchart: {Config.hyottchart[0]}\n"
+              f"bumgore: {Config.bumgore[0]}\n"
+              f"Macrojunglefortarzan: {Config.Macrojunglefortarzan[0]}\n\n"
               f"[네이버 블로그 체크포인터] \n"
-              f"gunhey: {gunhey[0]}", end="\n\n")
+              f"gunhey: {Config.gunhey[0]}", end="\n\n")
         show_menu()
 
     # 스케줄러 확인
@@ -334,24 +335,24 @@ def show_menu():
 
     # hedgehara 텔레그램 포스트 확인
     elif result == choices[7]:
-        tlg_check_post('hedgehara', hedgehara)
+        tlg_check_post('hedgehara', Config.hedgehara)
 
     # hyottchart 텔레그램 포스트 확인
     elif result == choices[8]:
-        tlg_check_post('hyottchart', hyottchart)
+        tlg_check_post('hyottchart', Config.hyottchart)
 
     # bumgore 텔레그램 포스트 확인
     elif result == choices[9]:
-        tlg_check_post('bumgore', bumgore)
+        tlg_check_post('bumgore', Config.bumgore)
 
     # Macrojunglefortarzan 텔레그램 포스트 확인
     elif result == choices[10]:
-        tlg_check_post('Macrojunglefortarzan', Macrojunglefortarzan)
+        tlg_check_post('Macrojunglefortarzan', Config.Macrojunglefortarzan)
 
     # MacroAllocation 텔레그램 포스트 확인
     elif result == choices[11]:
-        tlg_check_post('MacroAllocation', MacroAllocation)
+        tlg_check_post('MacroAllocation', Config.MacroAllocation)
 
     # 네이버 블로그 gunhey 포스트 확인
     elif result == choices[12]:
-        naver_check_post('gunhey', gunhey)
+        naver_check_post('gunhey', Config.gunhey)

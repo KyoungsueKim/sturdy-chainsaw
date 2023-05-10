@@ -7,9 +7,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 
-driver = None
-
-WAIT_TIME = 5
+class Config:
+    driver = None
+    WAIT_TIME = 5
 
 
 class position:
@@ -26,12 +26,11 @@ def getSoup(url: str) -> BeautifulSoup:
 
 
 def getDynamicSoup(url: str, commands=[]) -> BeautifulSoup:
-    global driver
     driver_path = "chromedriver"
 
     try:
         # 아직 드라이버가 없다면
-        if driver is None:
+        if Config.driver is None:
             # 크롬 드라이버 저장 경로가 없다면 새로 생성
             if not os.path.isdir(driver_path):
                 print("chromedriver 폴더를 새로 생성합니다.")
@@ -48,21 +47,21 @@ def getDynamicSoup(url: str, commands=[]) -> BeautifulSoup:
             options.add_argument("--headless")
 
             # 드라이버 생성
-            driver = webdriver.Chrome(service=service, options=options)
+            Config.driver = webdriver.Chrome(service=service, options=options)
 
-        driver.get(url)
+        Config.driver.get(url)
 
         # 커맨드 실행
         commands.append('window.scrollTo(0, document.body.scrollHeight)')
         for command in commands:
-            driver.implicitly_wait(5)
+            Config.driver.implicitly_wait(5)
             time.sleep(5)
-            driver.execute_script(command)
-        driver.implicitly_wait(5)
+            Config.driver.execute_script(command)
+        Config.driver.implicitly_wait(5)
         time.sleep(1)
 
         # soup 리턴
-        html = driver.page_source
+        html = Config.driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
         return soup
 
@@ -112,7 +111,7 @@ def sendImages():
         time.sleep(0.1)
         pyautogui.press('Enter')
 
-        for i in range(WAIT_TIME):
+        for i in range(Config.WAIT_TIME):
             time.sleep(1)
             print(i, end=" ")
 
@@ -136,7 +135,7 @@ def sendImages():
         time.sleep(0.1)
         pyautogui.press('Enter')
 
-        for i in range(WAIT_TIME):
+        for i in range(Config.WAIT_TIME):
             time.sleep(1)
             print(i, end=" ")
 
@@ -148,7 +147,7 @@ def saveImages(url: str, index=0):
     path = os.path.abspath('images')
     type = os.path.splitext(url)[-1]
     os.system(f'curl {url} > {path}/{index}{type}')
-    time.sleep(WAIT_TIME) # For download wait
+    time.sleep(Config.WAIT_TIME) # For download wait
 
 
 def deleteImages():

@@ -2,12 +2,11 @@ import base
 import flag
 import base
 
-current_id = 0
+class Config:
+    current_id = 0
 
 
 def article() -> dict:
-    global current_id
-
     result = {}
     soup = base.getDynamicSoup('https://kr.investing.com/news/stock-market-news')
     article_list = soup.find_all('article', {'class': 'js-article-item'})
@@ -20,9 +19,9 @@ def article() -> dict:
         text = element.text
 
         # 최신 글 이라면
-        if ("퇴근길" in text or "브런치" in text) and (current_id < id):
-            current_id = id
-            type = "퇴근길" if "퇴근길" in text else "브런치"
+        if ("주요뉴스" in text) and (Config.current_id < id):
+            Config.current_id = id
+            type = "주요뉴스"
             url = 'https://kr.investing.com' + element['href']
             soup = base.getDynamicSoup(url)
 
