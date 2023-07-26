@@ -1,4 +1,3 @@
-import base
 import flag
 import base
 
@@ -7,9 +6,22 @@ class Config:
 
 
 def article() -> dict:
-    result = {}
-    soup = base.getDynamicSoup('https://kr.investing.com/news/stock-market-news')
+    url = 'https://kr.investing.com/news/stock-market-news'
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Sec-Fetch-Site": "none",
+        "Accept-Encoding": "br",
+        "Sec-Fetch-Mode": "navigate",
+        "Host": "kr.investing.com",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Sec-Fetch-Dest": "document",
+        "Connection": "keep-alive",
+    }
+
+    soup = base.getSoup(url, headers=headers)
     article_list = soup.find_all('article', {'class': 'js-article-item'})
+    result = {}
     for i in range(len(article_list)):
         if not 'data-id' in article_list[i].attrs:
             continue
@@ -38,10 +50,40 @@ def article() -> dict:
 
 
 def calendar() -> list:
-    url = 'https://kr.investing.com/economic-calendar/'
-    commands = ['calendarFilters.timeFrameFilter(\'thisWeek\')']
+    url = "https://kr.investing.com/economic-calendar/Service/getCalendarFilteredData"
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Pragma": "no-cache",
+        "Accept": "*/*",
+        "Sec-Fetch-Site": "same-origin",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Sec-Fetch-Mode": "cors",
+        "Accept-Encoding": "br",
+        "Origin": "https://kr.investing.com",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15",
+        "Referer": "https://kr.investing.com/economic-calendar/",
+        "Connection": "keep-alive",
+        "Host": "kr.investing.com",
+        "Sec-Fetch-Dest": "empty",
+        "X-Requested-With": "XMLHttpRequest",
+    }
+    data = {
+        "importance": ["3"],
+        "timeZone": '88',
+        "timeFrame": "thisWeek",
+        "timeFilter": "timeRemain",
+        "timezoneId": "88",
+        "dateFrom": "2023-07-23",
+        "dateTo": "2023-07-29",
+        "timezoneCurrentTime": "15:55",
+        "timezoneFormat": "(GMT +9:00)",
+        "offsetSec": 32400,
+        "isFiltered": True,
+        "filterButtonState": "On",
+    }
 
-    soup = base.getDynamicSoup(url=url, commands=commands)
+    soup = base.postSoup(url, headers=headers, data=data)
     event_set = soup.find_all('tr', {'class': 'js-event-item'})
 
     result = []

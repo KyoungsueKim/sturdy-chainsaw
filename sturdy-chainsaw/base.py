@@ -1,6 +1,9 @@
 import subprocess
 import sys, os, time
-import requests, platform, pyautogui
+
+import httpx
+import html
+import platform, pyautogui
 import chromedriver_autoinstaller as AutoChrome
 from pyperclip import copy
 from bs4 import BeautifulSoup
@@ -17,12 +20,34 @@ class position:
     explorer = [0, 0]
 
 
-def getSoup(url: str) -> BeautifulSoup:
-    headers = {'User-Agent': ('Mozilla/5.0 (Windows NT 10.0;Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')}
-    req = requests.get(url=url, verify=False, headers=headers)
-    html = req.text
-    soup = BeautifulSoup(html, 'html.parser')
-    return soup
+def getSoup(url: str, headers: dict = None) -> BeautifulSoup:
+    if not headers:
+        headers = {'User-Agent': (
+            'Mozilla/5.0 (Windows NT 10.0;Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')}
+
+    with httpx.Client() as client:
+        response = client.get(url, headers=headers)
+        try:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            return soup
+        except Exception as e:
+            print(f"HTML 파싱 에러. {e}", file=sys.stderr)
+
+
+def postSoup(url: str, headers=None, data=None) -> BeautifulSoup:
+    if data is None:
+        data = {}
+    if headers is None:
+        headers = {}
+
+    with httpx.Client() as client:
+        response = client.post(url, headers=headers, data=data)
+        try:
+            response_text = html.unescape(bytes(response.text.replace('\/', '/'), "utf-8").decode("unicode_escape"))
+            soup = BeautifulSoup(response_text, "html.parser")
+            return soup
+        except Exception as e:
+            print(f"HTML 파싱 에러. {e}", file=sys.stderr)
 
 
 def getDynamicSoup(url: str, commands=[]) -> BeautifulSoup:
