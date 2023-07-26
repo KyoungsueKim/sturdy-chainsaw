@@ -35,7 +35,7 @@ def article() -> dict:
             Config.current_id = id
             type = "주요뉴스"
             url = 'https://kr.investing.com' + element['href']
-            soup = base.getDynamicSoup(url)
+            soup = base.getSoup(url)
 
             articlePage = soup.find('div', {'class': 'WYSIWYG articlePage'})
             img_url = articlePage.find('img')['src']
