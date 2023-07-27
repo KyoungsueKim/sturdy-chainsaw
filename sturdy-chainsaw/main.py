@@ -8,7 +8,7 @@ class Config:
 
 
 if __name__ == '__main__':
-    sys.stderr = open(log_config.log_file_name, 'w')
+    # sys.stderr = open(log_config.log_file_name, 'w')
     clearConsole()
     tutorial()
 

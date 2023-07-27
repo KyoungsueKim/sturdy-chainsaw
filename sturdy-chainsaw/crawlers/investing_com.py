@@ -1,5 +1,9 @@
+from datetime import date, timedelta, datetime
+
 import flag
+
 import base
+
 
 class Config:
     current_id = 0
@@ -68,15 +72,20 @@ def calendar() -> list:
         "Sec-Fetch-Dest": "empty",
         "X-Requested-With": "XMLHttpRequest",
     }
+    today = date.today()
+    weekday = today.weekday()
+    sunday = today - timedelta(days=(weekday)) + timedelta(days=(6 - weekday))
+    saturday = sunday + timedelta(days=6)
+    current_time = datetime.now().time()
     data = {
         "importance": ["3"],
         "timeZone": '88',
         "timeFrame": "thisWeek",
         "timeFilter": "timeRemain",
         "timezoneId": "88",
-        "dateFrom": "2023-07-23",
-        "dateTo": "2023-07-29",
-        "timezoneCurrentTime": "15:55",
+        "dateFrom": sunday.strftime('%Y-%m-%d'),
+        "dateTo": saturday.strftime('%Y-%m-%d'),
+        "timezoneCurrentTime": current_time.strftime("%H:%M"),
         "timezoneFormat": "(GMT +9:00)",
         "offsetSec": 32400,
         "isFiltered": True,
@@ -89,21 +98,37 @@ def calendar() -> list:
     result = []
     events = [event for event in event_set if len(event.find_all('td', {'data-img_key': 'bull3'})) > 0]
     for event in events:
-        datetime = event['data-event-datetime']
+        event_datetime = event['data-event-datetime']
         country = event.find('span')['title']
         title = " ".join(event.find('a').text.split())
         id = event['event_attr_id']
         emoji = flag.flag(event.find('td', {'class': 'flagCur'}).text[2:4])
-        result.append({'datetime': datetime, 'country': country, 'title': title, 'id': id, 'emoji': emoji})
+        result.append({'datetime': event_datetime, 'country': country, 'title': title, 'id': id, 'emoji': emoji})
 
     return result
 
 
 def calendar_find(id: str) -> dict:
     url = 'https://kr.investing.com/economic-calendar/'
-    commands = ['calendarFilters.timeFrameFilter(\'thisWeek\')']
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Pragma": "no-cache",
+        "Accept": "*/*",
+        "Sec-Fetch-Site": "same-origin",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Sec-Fetch-Mode": "cors",
+        "Accept-Encoding": "br",
+        "Origin": "https://kr.investing.com",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15",
+        "Referer": "https://kr.investing.com/economic-calendar/",
+        "Connection": "keep-alive",
+        "Host": "kr.investing.com",
+        "Sec-Fetch-Dest": "empty",
+        "X-Requested-With": "XMLHttpRequest",
+    }
 
-    soup = base.getDynamicSoup(url=url, commands=commands)
+    soup = base.getSoup(url=url, headers=headers)
     find_result = soup.find_all('tr', {'event_attr_id': id})[0]
 
     country = find_result.find('span')['title']
