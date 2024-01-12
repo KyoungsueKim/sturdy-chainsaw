@@ -26,7 +26,7 @@ def _scrape_article(article_item: bs4.Tag) -> Optional[dict]:
         article_page = soup.find("div", {"class": "WYSIWYG articlePage"})
         img_url = article_page.find("img")["src"]
         contents = [
-            title.text for title in article_page.find_all("p") if "▲" in title.text
+            title.text for title in article_page.find_all("p") if "◇" in title.text
         ]
         return {"type": type, "img_url": img_url, "article": contents, "url": url}
 
