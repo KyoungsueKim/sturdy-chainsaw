@@ -1,3 +1,4 @@
+import ssl
 import subprocess
 import sys, os, time
 
@@ -20,14 +21,17 @@ class position:
     explorer = [0, 0]
 
 
-def getSoup(url: str, headers: dict = None) -> BeautifulSoup:
+def getSoup(url: str, headers: dict = None, verify=None, http2=False) -> BeautifulSoup:
+    OP_LEGACY_SERVER_CONNECT = 0x4
     if not headers:
         headers = {'User-Agent': (
             'Mozilla/5.0 (Windows NT 10.0;Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36')}
 
-    with httpx.Client() as client:
-        response = client.get(url, headers=headers)
+    with httpx.Client(follow_redirects=True, verify=verify, http2=http2) as client:
         try:
+            client.headers = httpx.Headers(headers=headers)
+            client._transport._pool._ssl_context.options |= OP_LEGACY_SERVER_CONNECT  # 구형 서버 허용
+            response = client.get(url)
             soup = BeautifulSoup(response.text, 'html.parser')
             return soup
         except Exception as e:
@@ -41,9 +45,9 @@ def postSoup(url: str, headers=None, data=None, http2=False) -> BeautifulSoup:
         headers = {}
 
     with httpx.Client(http2=http2) as client:
-        client.headers = httpx.Headers(headers=headers)
-        response = client.post(url, data=data)
         try:
+            client.headers = httpx.Headers(headers=headers)
+            response = client.post(url, data=data)
             response_text = html.unescape(bytes(response.text.replace('\/', '/'), "utf-8").decode("unicode_escape"))
             soup = BeautifulSoup(response_text, "html.parser")
             return soup
