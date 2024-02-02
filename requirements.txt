@@ -5,5 +5,5 @@ apscheduler
 questionary
 pyautogui
 emoji-country-flag
-httpx
+httpx[http2]
 Brotli
