@@ -34,14 +34,15 @@ def getSoup(url: str, headers: dict = None) -> BeautifulSoup:
             print(f"HTML 파싱 에러. {e}", file=sys.stderr)
 
 
-def postSoup(url: str, headers=None, data=None) -> BeautifulSoup:
+def postSoup(url: str, headers=None, data=None, http2=False) -> BeautifulSoup:
     if data is None:
         data = {}
     if headers is None:
         headers = {}
 
-    with httpx.Client() as client:
-        response = client.post(url, headers=headers, data=data)
+    with httpx.Client(http2=http2) as client:
+        client.headers = httpx.Headers(headers=headers)
+        response = client.post(url, data=data)
         try:
             response_text = html.unescape(bytes(response.text.replace('\/', '/'), "utf-8").decode("unicode_escape"))
             soup = BeautifulSoup(response_text, "html.parser")
