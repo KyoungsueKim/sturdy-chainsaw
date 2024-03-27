@@ -23,6 +23,7 @@ class position:
 
 
 def getSoup(url: str, headers: dict = None, verify=False, http2=True) -> BeautifulSoup:
+    OP_LEGACY_SERVER_CONNECT = 0x4
     if not headers:
         headers = {
             "User-Agent": (
@@ -33,9 +34,7 @@ def getSoup(url: str, headers: dict = None, verify=False, http2=True) -> Beautif
     with httpx.Client(follow_redirects=True, verify=verify, http2=False) as client:
         try:
             client.headers = httpx.Headers(headers=headers)
-            # client._transport._pool._ssl_context.options |= (
-            #     ssl.OP_LEGACY_SERVER_CONNECT  # 구형 서버 허용
-            # )
+            client._transport._pool._ssl_context.options |= OP_LEGACY_SERVER_CONNECT  # 구형 서버 허용
             response = client.get(url)
             soup = BeautifulSoup(response.text, "html.parser")
             return soup
