@@ -18,15 +18,15 @@ def _scrape_article(article_item: bs4.Tag) -> Optional[dict]:
     element = article_item.find("a", {"class": "title"})
     text = element.text
     # 최신 글 이라면
-    if ("주요뉴스" in text) and (Config.current_id < id):
+    if (("주요" or "마감") in text) and (Config.current_id < id):
         Config.current_id = id
-        type = "주요뉴스"
+        type = "주요"
         url = "https://kr.investing.com" + element["href"]
         soup = base.getSoup(url)
         article_page = soup.find("div", {"class": "WYSIWYG articlePage"})
         img_url = article_page.find("img")["src"]
         contents = [
-            title.text for title in article_page.find_all("p") if "◇" in title.text
+            title.text for title in article_page.find_all("p") if ("◇" or "■") in title.text
         ]
         return {"type": type, "img_url": img_url, "article": contents, "url": url}
 

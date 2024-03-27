@@ -9,11 +9,19 @@ class Config:
 
 
 def economy() -> dict:
-    # SSL 컨텍스트 생성
-    ssl_context = ssl.create_default_context()
-    ssl_context.minimum_version = ssl.TLSVersion.TLSv1  # TLSv1 허용
+    headers = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Sec-Fetch-Site": "same-origin",
+        "Accept-Encoding": "gzip",
+        "Sec-Fetch-Mode": "navigate",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5.1 Safari/605.1.15",
+        "Accept-Language": "ko-KR,ko;q=0.9",
+        "Sec-Fetch-Dest": "document",
+        "Connection": "keep-alive",
+        "Origin": "https://www.yna.co.kr",
+    }
 
-    soup = base.getSoup('http://www.yna.co.kr/economy/international-economy', verify=ssl_context, http2=True)
+    soup = base.getSoup('https://www.yna.co.kr/economy/all', headers=headers, verify=False, http2=True)
     result_set = [result for result in soup.find_all('div', {'class': 'item-box01'}) if len(result.find_all('span', {'class': 'txt-time'})) > 0]
     article_date = datetime.strptime(datetime.now().strftime('%Y') + '-' + result_set[0].find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
 
