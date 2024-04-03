@@ -25,7 +25,7 @@ def economy() -> dict:
         "Origin": "https://www.yna.co.kr",
     }
 
-    soup = base.getSoup('https://www.yna.co.kr/market-plus/international-economy', headers=headers, verify=ssl_context, http2=True)
+    soup = base.getSoup('https://www.yna.co.kr/market-plus/global-market', headers=headers, verify=ssl_context, http2=True)
     result_set = [result for result in soup.find_all('div', {'class': 'item-box01'}) if len(result.find_all('span', {'class': 'txt-time'})) > 0]
     article_date = datetime.strptime(datetime.now().strftime('%Y') + '-' + result_set[0].find('span', {'class': 'txt-time'}).text, '%Y-%m-%d %H:%M')
 
